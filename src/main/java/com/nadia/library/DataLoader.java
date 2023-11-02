@@ -15,9 +15,9 @@ public class DataLoader implements CommandLineRunner {
   @Override
   public void run(String... args) {
     // create some `Book` objects
-    Book book1 = new Book("Edgar All Poe", "The Narrative of Arthur Gordon Pym of Nantucket", true);
-    Book book2 = new Book("Selma Lagerlöf", "Holgerssons underbara resa genom Sverige", false);
-    Book book3 = new Book("Albert Camus", "L'étranger", false);
+    Book book1 = new Book("Edgar All Poe", "The Narrative of Arthur Gordon Pym of Nantucket", false, null);
+    Book book2 = new Book("Selma Lagerlöf", "Holgerssons underbara resa genom Sverige", false, null);
+    Book book3 = new Book("Albert Camus", "L'étranger", false, null);
 
     // save these objects to the database
     bookRepository.save(book1);

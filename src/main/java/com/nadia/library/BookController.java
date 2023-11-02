@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 // marks the class as a Spring MVC controller, which is used for processing HTTP requests
@@ -35,6 +37,11 @@ public class BookController {
 
   @PostMapping("")
   public ResponseEntity<Book> createBook(@RequestBody Book book) {
+    // set a due date 21 days later
+    if (book.getIsBorrowed() == true) {
+      book.setDueDate(LocalDate.now().plusDays(21));
+    }
+
     Book savedBook = bookRepository.save(book);
 
     return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
@@ -57,6 +64,11 @@ public class BookController {
     }
     if (book.getIsBorrowed() != null) {
       currentBook.setIsBorrowed(book.getIsBorrowed());
+      if (book.getIsBorrowed() == true) {
+        currentBook.setDueDate(LocalDate.now().plusDays(21));
+      } else {
+        currentBook.setDueDate(null);
+      }
     }
 
     Book updatedBook = bookRepository.save(currentBook);
