@@ -17,6 +17,8 @@ public class BookController {
   // used to inject the `BookRepository` into the `BookController` class
   @Autowired
   private BookRepository bookRepository;
+  @Autowired
+  private InventoryRepository inventoryRepository;
 
   //controller methods handling HTTP GET/POST/PATCH/DELETE requests
   @GetMapping("")
@@ -43,6 +45,12 @@ public class BookController {
     }
 
     Book savedBook = bookRepository.save(book);
+
+    // automatically add the book to the inventory with inStock value of 1
+    Inventory inventoryItem = new Inventory();
+    inventoryItem.setBook(savedBook);
+    inventoryItem.setInStock(1);
+    inventoryRepository.save(inventoryItem);
 
     return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
   }
