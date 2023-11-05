@@ -1,4 +1,4 @@
-package com.nadia.library;
+package com.nadia.library.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,37 +12,37 @@ public class Inventory {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-  private Long itemId;
+  private Long id;
 
-  // Define a Many-to-One relationship with the `Book` entity
+  // define a many-to-one relationship with the `Book` entity
   @ManyToOne
-  // ! the following line does nothing, needs to investigate...
-  @JoinColumn(name = "bookId", referencedColumnName="id") // Name of the foreign key column
+  @JoinColumn(name = "bookId", referencedColumnName = "id", insertable = false, updatable = false)
   private Book book;
+  private Long bookId;
 
   private int inStock;
 
   public Inventory() {}
 
-  public Inventory(Book book, int inStock) {
-    this.book = book;
+  public Inventory(Long bookId, int inStock) {
+    this.bookId = bookId;
     this.inStock = inStock;
   }
 
-  public Long getItemId() {
-    return itemId;
+  public Long getId() {
+    return id;
   }
 
-  public void setItemId(Long itemId) {
-    this.itemId = itemId;
+  public void setId(Long id) {
+    this.id = id;
   }
 
-  public Book getBook() {
-    return book;
+  public Long getBookId() {
+    return bookId;
   }
 
-  public void setBook(Book book) {
-    this.book = book;
+  public void setBookId(Long bookId) {
+    this.bookId = bookId;
   }
 
   public int getInStock() {
