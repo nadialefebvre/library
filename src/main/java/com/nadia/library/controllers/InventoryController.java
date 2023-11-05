@@ -34,7 +34,7 @@ public class InventoryController {
 
   // updates the number of copies that are available for a loan
   @PatchMapping("")
-  public ResponseEntity<Inventory> updateStock(
+  public ResponseEntity<Inventory> updateStockofInventoryItemByBookId(
     @RequestParam Long bookId,
     @RequestBody Inventory inventory
   ) {

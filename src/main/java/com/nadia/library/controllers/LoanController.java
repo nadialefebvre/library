@@ -71,7 +71,7 @@ public class LoanController {
 
   // renewal: extends loan length if isRenewable
   @PatchMapping("/{id}")
-  public ResponseEntity<Loan> updateLoan(@PathVariable("id") Long id) {
+  public ResponseEntity<Loan> renewLoan(@PathVariable("id") Long id) {
     Loan currentLoan = loanRepository.findById(id).orElse(null);
 
     if (currentLoan == null) {
