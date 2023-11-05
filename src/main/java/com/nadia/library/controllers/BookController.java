@@ -80,27 +80,8 @@ public class BookController {
     return new ResponseEntity<>(updatedBook, HttpStatus.OK);
   }
 
-  // ! maybe should be only in Inventory???
-  // deletes only one copy by updating Inventory
-  @DeleteMapping("/{id}")
-  public ResponseEntity<HttpStatus> deleteOneBookCopy(@PathVariable("id") Long id) {
-    Book book = bookRepository.findById(id).orElse(null);
-    Inventory inventory = inventoryRepository.findByBookId(id);
-
-    if (book == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    if (inventory.getInStock() > 0) {
-      inventory.setInStock(inventory.getInStock() - 1);
-      inventoryRepository.save(inventory);
-      return new ResponseEntity<>(HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-  }
-
   // deletes all copies of one book (but only if no copy is currently loaned)
-  @DeleteMapping("/{id}/all")
+  @DeleteMapping("/{id}")
   public ResponseEntity<HttpStatus> deleteAllBookCopies(@PathVariable("id") Long id) {
     Book book = bookRepository.findById(id).orElse(null);
     Inventory inventory = inventoryRepository.findByBookId(id);
