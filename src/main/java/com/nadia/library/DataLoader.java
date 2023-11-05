@@ -58,8 +58,8 @@ public class DataLoader implements CommandLineRunner {
     inventoryRepository.save(inventory3);
 
     // create `User` entries
-    User user1 = new User("Sofia B");
-    User user2 = new User("Freja L");
+    User user1 = new User("Sofia B", "123 Main St.");
+    User user2 = new User("Freja L", "456 Main St.");
 
     // save these `User` entries
     userRepository.save(user1);
