@@ -6,66 +6,38 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.nadia.library.models.Author;
-import com.nadia.library.repositories.AuthorRepository;
+import com.nadia.library.services.AuthorService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/authors")
 public class AuthorController {
-    @Autowired
-    private AuthorRepository authorRepository;
+  @Autowired
+  private AuthorService authorService;
 
-    @GetMapping("")
-    public List<Author> getAllAuthors() {
-        return authorRepository.findAll();
-    }
+  @GetMapping("")
+  public List<Author> getAllAuthors() {
+    return authorService.getAllAuthors();
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Author> getAuthorById(@PathVariable("id") Long id) {
-        Author author = authorRepository.findById(id).orElse(null);
+  @GetMapping("/{id}")
+  public ResponseEntity<Author> getAuthorById(@PathVariable("id") Long id) {
+    return authorService.getAuthorById(id);
+  }
 
-        if (author == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+  @PostMapping("")
+  public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
+    return authorService.createAuthor(author);
+  }
 
-        return new ResponseEntity<>(author, HttpStatus.OK);
-    }
+  @PatchMapping("/{id}")
+  public ResponseEntity<Author> updateAuthor(@PathVariable("id") Long id, @RequestBody Author author) {
+    return authorService.updateAuthor(id, author);
+  }
 
-    @PostMapping("")
-    public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
-        Author savedAuthor = authorRepository.save(author);
-
-        return new ResponseEntity<>(savedAuthor, HttpStatus.CREATED);
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<Author> updateAuthor(@PathVariable("id") Long id, @RequestBody Author author) {
-        Author currentAuthor = authorRepository.findById(id).orElse(null);
-
-        if (currentAuthor == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        if (author.getName() != null) {
-            currentAuthor.setName(author.getName());
-        }
-
-        Author updatedAuthor = authorRepository.save(currentAuthor);
-
-        return new ResponseEntity<>(updatedAuthor, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteAuthor(@PathVariable("id") Long id) {
-        Author author = authorRepository.findById(id).orElse(null);
-
-        if (author == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        authorRepository.delete(author);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<HttpStatus> deleteAuthor(@PathVariable("id") Long id) {
+    return authorService.deleteAuthor(id);
+  }
 }

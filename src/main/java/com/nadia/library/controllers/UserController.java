@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.nadia.library.models.User;
-import com.nadia.library.repositories.UserRepository;
+import com.nadia.library.services.UserService;
 
 import java.util.List;
 
@@ -14,58 +14,33 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping("")
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
-        User user = userRepository.findById(id).orElse(null);
-
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return userService.getUserById(id);
     }
 
     @PostMapping("")
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userRepository.save(user);
-
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        return userService.createUser(user);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
-        User currentUser = userRepository.findById(id).orElse(null);
-
-        if (currentUser == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        if (user.getName() != null) {
-            currentUser.setName(user.getName());
-        }
-
-        User updatedUser = userRepository.save(currentUser);
-
-        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    public ResponseEntity<User> updateUser(
+      @PathVariable("id") Long id,
+      @RequestBody User user
+    ) {
+        return userService.updateUser(id, user);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
-        User user = userRepository.findById(id).orElse(null);
-
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        userRepository.delete(user);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      return userService.deleteUser(id);
     }
 }

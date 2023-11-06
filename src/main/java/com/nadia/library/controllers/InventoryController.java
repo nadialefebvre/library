@@ -1,12 +1,11 @@
 package com.nadia.library.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.nadia.library.models.Inventory;
-import com.nadia.library.repositories.InventoryRepository;
+import com.nadia.library.services.InventoryService;
 
 import java.util.List;
 
@@ -14,22 +13,16 @@ import java.util.List;
 @RequestMapping("/inventory")
 public class InventoryController {
   @Autowired
-  private InventoryRepository inventoryRepository;
+  private InventoryService inventoryService;
 
   @GetMapping("")
   public List<Inventory> getAllInventory() {
-    return inventoryRepository.findAll();
+    return inventoryService.getAllInventory();
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<Inventory> getInventoryItemById(@PathVariable("id") Long id) {
-    Inventory inventoryItem = inventoryRepository.findById(id).orElse(null);
-
-    if (inventoryItem == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    return new ResponseEntity<>(inventoryItem, HttpStatus.OK);
+    return inventoryService.getInventoryItemById(id);
   }
 
   // updates the number of copies that are available for a loan
@@ -38,14 +31,6 @@ public class InventoryController {
     @RequestParam Long bookId,
     @RequestBody Inventory inventory
   ) {
-    Inventory currentInventory = inventoryRepository.findByBookId(bookId);
-
-    if (currentInventory != null) {
-      currentInventory.setInStock(inventory.getInStock());;
-      currentInventory = inventoryRepository.save(currentInventory);
-      return new ResponseEntity<>(currentInventory, HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+    return inventoryService.updateStockofInventoryItemByBookId(bookId, inventory);
   }
 }
