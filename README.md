@@ -49,15 +49,42 @@ Before running the application, ensure the following configurations and environm
 
 The application provides the following API endpoints for managing books:
 
+### Books
+
 - `GET /books`: Retrieve a list of all books.
 - `GET /books/{id}`: Retrieve a specific book by its ID.
 - `POST /books`: Create a new book.
 - `PATCH /books/{id}`: Update an existing book (supports partial updates).
 - `DELETE /books/{id}`: Delete a book by its ID.
 
+### Inventory
+
+- `GET /inventory`: Retrieve a list of all inventory items.
+- `GET /inventory/{id}`: Retrieve a specific inventory item by its ID.
+- `PATCH /inventory`: Update the stock of an inventory item by book ID.
+
+### Loans
+
+- `GET /loans`: Retrieve a list of all loans.
+- `GET /loans/late`: Retrieve a list of all late loans.
+- `GET /loans/{id}`: Retrieve a specific loan by its ID.
+- `POST /loans`: Create a new loan.
+- `PATCH /loans/{id}`: Renew an existing loan (if renewable).
+- `DELETE /loans/{id}`: Delete a loan (when the user returns a copy).
+
+### Users
+
+- `GET /users`: Retrieve a list of all users.
+- `GET /users/{id}`: Retrieve a specific user by their ID.
+- `POST /users`: Create a new user.
+- `PATCH /users/{id}`: Update an existing user.
+- `DELETE /users/{id}`: Delete a user.
+
 ## Example usage
 
 Here are some example requests you can make to interact with the API:
+
+### Books
 
 - Retrieve all books:
 
@@ -78,8 +105,7 @@ Here are some example requests you can make to interact with the API:
   Body:
   {
     "author": "Samuel Beckett",
-    "title": "Molloy",
-    "isBorrowed": false
+    "title": "Molloy"
   }
   ```
 
@@ -96,6 +122,111 @@ Here are some example requests you can make to interact with the API:
 - Delete a book by ID:
   ```
   DELETE http://localhost:8080/books/{id}
+  ```
+
+### Inventory
+
+- Retrieve all inventory items:
+
+  ```
+  GET http://localhost:8080/inventory
+  ```
+
+- Retrieve a specific inventory item by ID:
+
+  ```
+  GET http://localhost:8080/inventory/{id}
+  ```
+
+- Update the stock of an inventory item by book ID:
+  ```
+  PATCH http://localhost:8080/inventory?bookId={bookId}
+  Body:
+  {
+    "inStock": 10
+  }
+  ```
+
+### Loans
+
+- Retrieve all loans:
+
+  ```
+  GET http://localhost:8080/loans
+  ```
+
+- Retrieve all late loans:
+
+  ```
+  GET http://localhost:8080/loans/late
+  ```
+
+- Retrieve a specific loan by ID:
+
+  ```
+  GET http://localhost:8080/loans/{id}
+  ```
+
+- Create a new loan:
+
+  ```
+  POST http://localhost:8080/loans
+  Body:
+  {
+    "userId": 1,
+    "bookId": 2
+  }
+  ```
+
+- Renew an existing loan (if renewable):
+
+  ```
+  PATCH http://localhost:8080/loans/{id}
+  ```
+
+- Delete a loan (when the user returns a copy):
+  ```
+  DELETE http://localhost:8080/loans/{id}
+  ```
+
+### Users
+
+- Retrieve all users:
+
+  ```
+  GET http://localhost:8080/users
+  ```
+
+- Retrieve a specific user by ID:
+
+  ```
+  GET http://localhost:8080/users/{id}
+  ```
+
+- Create a new user:
+
+  ```
+  POST http://localhost:8080/users
+  Body:
+  {
+    "name": "John Doe"
+    "address": "789 Main St."
+  }
+  ```
+
+- Update an existing user:
+
+  ```
+  PATCH http://localhost:8080/users/{id}
+  Body:
+  {
+    "name": "Updated name"
+  }
+  ```
+
+- Delete a user:
+  ```
+  DELETE http://localhost:8080/users/{id}
   ```
 
 ## Tech
