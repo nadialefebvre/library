@@ -1,17 +1,17 @@
 package com.nadia.library.services;
 
+import com.nadia.library.models.Book;
+import com.nadia.library.models.Inventory;
+import com.nadia.library.repositories.BookRepository;
+import com.nadia.library.repositories.InventoryRepository;
+import com.nadia.library.repositories.LoanRepository;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.nadia.library.models.Book;
-import com.nadia.library.models.Inventory;
-import com.nadia.library.repositories.BookRepository;
-import com.nadia.library.repositories.InventoryRepository;
-import com.nadia.library.repositories.LoanRepository;
 
 @Service
 public class BookService {
@@ -38,6 +38,7 @@ public class BookService {
 
   public ResponseEntity<Book> addBook(Book book) {
     Book bookEntry = bookRepository.findByAuthorAndTitle(book.getAuthor(), book.getTitle());
+
     if (bookEntry != null) {
       // automatically increment the inventory entry inStock value by 1
       inventoryRepository.incrementInventory(bookEntry.getId());
@@ -57,16 +58,9 @@ public class BookService {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // ensure that each field is changed only if new value is sent
-    if (book.getAuthor() != null) {
-      currentBook.setAuthor(book.getAuthor());
-    }
-    if (book.getTitle() != null) {
-      currentBook.setTitle(book.getTitle());
-    }
-
+    currentBook.setAuthor(book.getAuthor());
+    currentBook.setTitle(book.getTitle());
     Book updatedBook = bookRepository.save(currentBook);
-
     return new ResponseEntity<>(updatedBook, HttpStatus.OK);
   }
 
@@ -77,13 +71,15 @@ public class BookService {
     if (book == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
     boolean isACopyLoaned = loanRepository.existsByBookId(id);
+
     if (isACopyLoaned) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     } else {
-    inventoryRepository.delete(inventory);
-    bookRepository.delete(book);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      inventoryRepository.delete(inventory);
+      bookRepository.delete(book);
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
   }
 }

@@ -1,14 +1,16 @@
 package com.nadia.library.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.nadia.library.models.Author;
 import com.nadia.library.services.AuthorService;
 
 import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/authors")
@@ -27,12 +29,12 @@ public class AuthorController {
   }
 
   @PostMapping("")
-  public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
+  public ResponseEntity<Author> createAuthor(@Valid @RequestBody Author author) {
     return authorService.createAuthor(author);
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<Author> updateAuthor(@PathVariable("id") Long id, @RequestBody Author author) {
+  public ResponseEntity<Author> updateAuthor(@PathVariable("id") Long id, @Valid @RequestBody Author author) {
     return authorService.updateAuthor(id, author);
   }
 

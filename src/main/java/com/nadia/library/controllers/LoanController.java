@@ -1,14 +1,16 @@
 package com.nadia.library.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.nadia.library.models.Loan;
 import com.nadia.library.services.LoanService;
 
 import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/loans")
@@ -32,7 +34,7 @@ public class LoanController {
   }
 
   @PostMapping("")
-  public ResponseEntity<Loan> createLoan(@RequestBody Loan loan) {
+  public ResponseEntity<Loan> createLoan(@Valid @RequestBody Loan loan) {
     return loanService.createLoan(loan);
   }
 

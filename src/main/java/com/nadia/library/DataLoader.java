@@ -1,19 +1,19 @@
 package com.nadia.library;
 
-import java.time.LocalDate;
-
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-
 import com.nadia.library.models.Book;
 import com.nadia.library.models.Inventory;
 import com.nadia.library.models.Loan;
-import com.nadia.library.models.User;
 import com.nadia.library.models.Loan.Status;
+import com.nadia.library.models.User;
 import com.nadia.library.repositories.BookRepository;
 import com.nadia.library.repositories.InventoryRepository;
 import com.nadia.library.repositories.LoanRepository;
 import com.nadia.library.repositories.UserRepository;
+
+import java.time.LocalDate;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 // provides a method (`run`) that will be executed when the app starts
 @Component
@@ -58,16 +58,16 @@ public class DataLoader implements CommandLineRunner {
     inventoryRepository.save(inventory3);
 
     // create `User` entries
-    User user1 = new User("Sofia B", "123 Main St.");
-    User user2 = new User("Freja L", "456 Main St.");
+    User user1 = new User("Sofia B", "123 Main St.", "sofia@example.com");
+    User user2 = new User("Freja L", "456 Main St.", "freja@example.com");
 
     // save these `User` entries
     userRepository.save(user1);
     userRepository.save(user2);
 
     // create `Loan` entries and associate them with books and users
-    Loan loan1 = new Loan(book1.getId(), user1.getId(), Status.NEW_LOAN, LocalDate.now().minusDays(8));
-    Loan loan2 = new Loan(book2.getId(), user2.getId(), Status.NEW_LOAN, LocalDate.now().minusDays(30));
+    Loan loan1 = new Loan(book1.getId(), user1.getId(), Status.NEW_LOAN, LocalDate.parse("2023-10-30"));
+    Loan loan2 = new Loan(book2.getId(), user2.getId(), Status.NEW_LOAN, LocalDate.parse("2023-10-05"));
     Loan loan3 = new Loan(book1.getId(), user2.getId(), Status.RENEWAL, LocalDate.now());
 
     // save these `Loan` entries

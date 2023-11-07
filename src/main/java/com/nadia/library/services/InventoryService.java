@@ -1,13 +1,14 @@
 package com.nadia.library.services;
 
+import com.nadia.library.models.Inventory;
+import com.nadia.library.repositories.InventoryRepository;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.nadia.library.models.Inventory;
-import com.nadia.library.repositories.InventoryRepository;
 
 @Service
 public class InventoryService {
@@ -19,24 +20,24 @@ public class InventoryService {
   }
 
   public ResponseEntity<Inventory> getInventoryItemById(Long id) {
-    Inventory inventoryItem = inventoryRepository.findById(id).orElse(null);
+    Inventory inventory = inventoryRepository.findById(id).orElse(null);
 
-    if (inventoryItem == null) {
+    if (inventory == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    return new ResponseEntity<>(inventoryItem, HttpStatus.OK);
+    return new ResponseEntity<>(inventory, HttpStatus.OK);
   }
 
   public ResponseEntity<Inventory> updateStockofInventoryItemByBookId(Long bookId, Inventory inventory) {
     Inventory currentInventory = inventoryRepository.findByBookId(bookId);
 
-    if (currentInventory != null) {
-      currentInventory.setInStock(inventory.getInStock());
-      currentInventory = inventoryRepository.save(currentInventory);
-      return new ResponseEntity<>(currentInventory, HttpStatus.OK);
-    } else {
+    if (currentInventory == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    currentInventory.setInStock(inventory.getInStock());
+    Inventory updatedInventory = inventoryRepository.save(currentInventory);
+    return new ResponseEntity<>(updatedInventory, HttpStatus.OK);
   }
 }

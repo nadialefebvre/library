@@ -2,30 +2,25 @@ package com.nadia.library.models;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Loan {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-
   private Long id;
 
-  // define a many-to-one relationship with the `Book` entity
-  @ManyToOne
+  @ManyToOne // define a many-to-one relationship with the `Book` entity
   @JoinColumn(name = "bookId", referencedColumnName = "id", insertable = false, updatable = false)
   private Book book;
+  @NotNull(message = "`bookId` is a mandatory field")
   private Long bookId;
 
-  // define a many-to-one relationship with the `Book` entity
-  @ManyToOne
+  @ManyToOne // define a many-to-one relationship with the `User` entity
   @JoinColumn(name = "userId", referencedColumnName = "id", insertable = false, updatable = false)
   private User user;
+  @NotNull(message = "`userId` is a mandatory field")
   private Long userId;
 
   public enum Status {

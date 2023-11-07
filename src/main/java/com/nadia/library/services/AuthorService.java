@@ -1,14 +1,14 @@
 package com.nadia.library.services;
 
+import com.nadia.library.models.Author;
+import com.nadia.library.repositories.AuthorRepository;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.nadia.library.models.Author;
-import com.nadia.library.repositories.AuthorRepository;
 
 @Service
 public class AuthorService {
@@ -31,7 +31,6 @@ public class AuthorService {
 
   public ResponseEntity<Author> createAuthor(Author author) {
     Author savedAuthor = authorRepository.save(author);
-
     return new ResponseEntity<>(savedAuthor, HttpStatus.CREATED);
   }
 
@@ -42,16 +41,9 @@ public class AuthorService {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    if (author.getName() != null) {
-      currentAuthor.setName(author.getName());
-    }
-
-    if (author.getCountry() != null) {
-      currentAuthor.setCountry(author.getCountry());
-    }
-
+    currentAuthor.setName(author.getName());
+    currentAuthor.setCountry(author.getCountry());
     Author updatedAuthor = authorRepository.save(currentAuthor);
-
     return new ResponseEntity<>(updatedAuthor, HttpStatus.OK);
   }
 
@@ -63,7 +55,6 @@ public class AuthorService {
     }
 
     authorRepository.delete(author);
-
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }

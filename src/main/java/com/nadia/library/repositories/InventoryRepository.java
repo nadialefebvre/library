@@ -1,15 +1,15 @@
 package com.nadia.library.repositories;
 
+import com.nadia.library.models.Inventory;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.nadia.library.models.Inventory;
 
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
   Inventory findByBookId(Long bookId);
 
-  public default int inventoryInStockValue(Long bookId) {
+  public default Integer inventoryInStockValue(Long bookId) {
     Inventory inventoryEntry = findByBookId(bookId);
     return inventoryEntry.getInStock();
   }

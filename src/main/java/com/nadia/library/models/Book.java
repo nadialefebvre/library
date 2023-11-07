@@ -4,18 +4,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 
 // indicates that the class is an entity = it will be mapped to a database table
 @Entity
 // the `Book` class represents a table in a database
 public class Book {
-  // specifies the primary jey and how it's generated
+  // specifies the primary key and how it's generated
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-  // set the fields for the `Book` class
   private Long id;
+
+  @NotNull(message = "`author` is a mandatory field")
   private String author;
+
+  @NotNull(message = "`title` is a mandatory field")
   private String title;
 
   // default constructor

@@ -1,5 +1,10 @@
 package com.nadia.library.services;
 
+import com.nadia.library.models.Loan;
+import com.nadia.library.models.Loan.Status;
+import com.nadia.library.repositories.InventoryRepository;
+import com.nadia.library.repositories.LoanRepository;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,11 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.nadia.library.models.Loan;
-import com.nadia.library.models.Loan.Status;
-import com.nadia.library.repositories.InventoryRepository;
-import com.nadia.library.repositories.LoanRepository;
 
 @Service
 public class LoanService {
@@ -26,9 +26,10 @@ public class LoanService {
     return loans;
   }
 
+  // filter the list to include only late loans
   public List<Loan> getAllLateLoans() {
     List<Loan> loans = loanRepository.findAll();
-    // filter the list to include only late loans
+
     List<Loan> lateLoans = loans.stream()
       .filter(loan -> loanRepository.isLate(loan))
       .collect(Collectors.toList());
@@ -47,19 +48,15 @@ public class LoanService {
   }
 
   public ResponseEntity<Loan> createLoan(Loan loan) {
-    boolean isACompleteRequest = loan.getUserId() != null && loan.getBookId() != null;
     boolean isAvailableForALoan = inventoryRepository.inventoryInStockValue(loan.getBookId()) > 0;
-    if (!isACompleteRequest) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    } else if (!isAvailableForALoan) {
+
+    if (!isAvailableForALoan) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     } else {
       inventoryRepository.decrementInventory(loan.getBookId());
       loan.setStatus(Status.NEW_LOAN);
       loan.setBorrowingDate(LocalDate.now());
-
       Loan savedLoan = loanRepository.save(loan);
-
       return new ResponseEntity<>(savedLoan, HttpStatus.CREATED);
     }
   }
@@ -72,6 +69,7 @@ public class LoanService {
     }
 
     boolean isRenewable = currentLoan.getStatus() == Status.NEW_LOAN && !loanRepository.isLate(currentLoan);
+
     if (!isRenewable) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     } else {
@@ -88,9 +86,9 @@ public class LoanService {
     if (loan == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
     inventoryRepository.incrementInventory(loan.getBookId());
     loanRepository.delete(loan);
-
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }

@@ -1,14 +1,16 @@
 package com.nadia.library.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.nadia.library.models.User;
 import com.nadia.library.services.UserService;
 
 import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -27,14 +29,14 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         return userService.createUser(user);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<User> updateUser(
       @PathVariable("id") Long id,
-      @RequestBody User user
+      @Valid @RequestBody User user
     ) {
         return userService.updateUser(id, user);
     }

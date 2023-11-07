@@ -1,30 +1,27 @@
 package com.nadia.library.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Inventory {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-
   private Long id;
 
-  // define a many-to-one relationship with the `Book` entity
-  @ManyToOne
+  @ManyToOne // defines a many-to-one relationship with the `Book` entity
   @JoinColumn(name = "bookId", referencedColumnName = "id", insertable = false, updatable = false)
   private Book book;
   private Long bookId;
 
-  private int inStock;
+  @Min(value=0, message = "`inStock` can't have a value < 0")
+  @NotNull(message = "`inStock` is a mandatory field")
+  private Integer inStock; // uses `Integer` instead of `int` to allow a `null` value
 
   public Inventory() {}
 
-  public Inventory(Long bookId, int inStock) {
+  public Inventory(Long bookId, Integer inStock) {
     this.bookId = bookId;
     this.inStock = inStock;
   }
@@ -45,11 +42,11 @@ public class Inventory {
     this.bookId = bookId;
   }
 
-  public int getInStock() {
+  public Integer getInStock() {
     return inStock;
   }
 
-  public void setInStock(int inStock) {
+  public void setInStock(Integer inStock) {
     this.inStock = inStock;
   }
 }

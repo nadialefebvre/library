@@ -1,14 +1,16 @@
 package com.nadia.library.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.nadia.library.models.Book;
 import com.nadia.library.services.BookService;
 
 import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 // marks the class as a Spring MVC controller, which is used for processing HTTP requests
 @RestController
@@ -32,12 +34,12 @@ public class BookController {
   }
 
   @PostMapping("")
-  public ResponseEntity<Book> addBook(@RequestBody Book book) {
+  public ResponseEntity<Book> addBook(@Valid @RequestBody Book book) {
     return bookService.addBook(book);
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @RequestBody Book book) {
+  public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @Valid @RequestBody Book book) {
     return bookService.updateBook(id, book);
   }
 

@@ -1,13 +1,15 @@
 package com.nadia.library.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.nadia.library.models.Inventory;
 import com.nadia.library.services.InventoryService;
 
 import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/inventory")
@@ -29,7 +31,7 @@ public class InventoryController {
   @PatchMapping("")
   public ResponseEntity<Inventory> updateStockofInventoryItemByBookId(
     @RequestParam Long bookId,
-    @RequestBody Inventory inventory
+    @Valid @RequestBody Inventory inventory
   ) {
     return inventoryService.updateStockofInventoryItemByBookId(bookId, inventory);
   }

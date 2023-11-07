@@ -1,9 +1,9 @@
 package com.nadia.library.repositories;
 
+import com.nadia.library.models.Book;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.nadia.library.models.Book;
 
 // defines a Java interface `BookRepository` that extends the `JpaRepository` interface
 // the `BookRepository` interface is used to interact with a database and perform CRUD operations on `Book` instances

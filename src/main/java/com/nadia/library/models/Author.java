@@ -1,9 +1,11 @@
 package com.nadia.library.models;
 
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Author extends Person {
+  @NotNull(message = "`country` is a mandatory field")
   private String country;
 
   public Author() {}

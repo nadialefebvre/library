@@ -1,14 +1,14 @@
 package com.nadia.library.services;
 
+import com.nadia.library.models.User;
+import com.nadia.library.repositories.UserRepository;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.nadia.library.models.User;
-import com.nadia.library.repositories.UserRepository;
 
 @Service
 public class UserService {
@@ -42,16 +42,10 @@ public class UserService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    if (user.getName() != null) {
-        currentUser.setName(user.getName());
-    }
-
-    if (user.getAddress() != null) {
-        currentUser.setAddress(user.getAddress());
-    }
-
+    currentUser.setName(user.getName());
+    currentUser.setAddress(user.getAddress());
+    currentUser.setEmail(user.getEmail());
     User updatedUser = userRepository.save(currentUser);
-
     return new ResponseEntity<>(updatedUser, HttpStatus.OK);
 }
 
