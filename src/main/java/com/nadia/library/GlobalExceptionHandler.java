@@ -10,8 +10,17 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+/**
+ * A global exception handler class to handle validation errors in the application.
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
+  /**
+   * Exception handler method to handle MethodArgumentNotValidException, which occurs when request data fails validation.
+   *
+   * @param ex The MethodArgumentNotValidException that was thrown.
+   * @return A ResponseEntity containing the error message and HTTP status code.
+   */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<String> handleValidationErrors(MethodArgumentNotValidException ex) {
     Map<String, String> validationErrors = new HashMap<>();

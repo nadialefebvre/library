@@ -12,38 +12,67 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// marks the class as a Spring MVC controller, which is used for processing HTTP requests
+/**
+ * Controller for handling Book-related operations.
+ *
+ * A controller class responsible for managing Book entities.
+ */
 @RestController
-// specifies that this controller will handle requests mapped to the `/books` endpoint
-// all the methods in this controller will be relative to this base path
 @RequestMapping("/books")
 public class BookController {
-  // used to inject the `BookRepository` into the `BookController` class
   @Autowired
   private BookService bookService;
 
-  //controller methods handling HTTP GET/POST/PATCH/DELETE requests
+  /**
+   * Get a list of all books.
+   *
+   * @return A list of Book entities.
+   */
   @GetMapping("")
   public List<Book> getAllBooks() {
     return bookService.getAllBooks();
   }
 
+  /**
+   * Get a book by its ID.
+   *
+   * @param id The ID of the book to retrieve.
+   * @return A ResponseEntity containing the Book entity if found.
+   */
   @GetMapping("/{id}")
   public ResponseEntity<Book> getBookById(@PathVariable("id") Long id) {
     return bookService.getBookById(id);
   }
 
+  /**
+   * Add a new Book.
+   *
+   * @param book The Book entity to create.
+   * @return A ResponseEntity containing the created Book entity.
+   */
   @PostMapping("")
   public ResponseEntity<Book> addBook(@Valid @RequestBody Book book) {
     return bookService.addBook(book);
   }
 
+  /**
+   * Update an existing Book by its ID.
+   *
+   * @param id   The ID of the book to update.
+   * @param book The updated Book entity.
+   * @return A ResponseEntity containing the updated Book entity.
+   */
   @PatchMapping("/{id}")
   public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @Valid @RequestBody Book book) {
     return bookService.updateBook(id, book);
   }
 
-  // deletes all copies of one book (but only if no copy is currently loaned)
+  /**
+   * Delete all copies of a book (if no copy is currently loaned).
+   *
+   * @param id The ID of the book to delete.
+   * @return A ResponseEntity with HTTP status indicating the result of the delete operation.
+   */
   @DeleteMapping("/{id}")
   public ResponseEntity<HttpStatus> deleteAllBookCopies(@PathVariable("id") Long id) {
     return bookService.deleteAllBookCopies(id);
