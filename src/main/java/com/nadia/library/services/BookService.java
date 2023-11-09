@@ -41,7 +41,7 @@ public class BookService {
    * @return A ResponseEntity containing the Book entity if found.
    */
   public ResponseEntity<Book> getBookById(Long id) {
-    Book book = bookRepository.findById(id).orElse(null);
+    Book book = findBookById(id);
 
     if (book == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -51,7 +51,8 @@ public class BookService {
   }
 
   /**
-   * Add a book to the library's collection (create a new one or increment in-stock value if book exists already).
+   * Add a book to the library's collection.
+   * If the book already exists, increment the in-stock value; otherwise, create a new entry.
    *
    * @param book The Book entity to add.
    * @return A ResponseEntity containing the added Book entity.
@@ -62,11 +63,11 @@ public class BookService {
     if (bookEntry != null) {
       inventoryRepository.incrementInventory(bookEntry.getId());
       return new ResponseEntity<>(bookEntry, HttpStatus.OK);
-    } else {
-      Book savedBook = bookRepository.save(book);
-      inventoryRepository.addInventoryItem(savedBook.getId());
-      return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
     }
+
+    Book savedBook = bookRepository.save(book);
+    inventoryRepository.addInventoryItem(savedBook.getId());
+    return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
   }
 
   /**
@@ -77,7 +78,7 @@ public class BookService {
    * @return A ResponseEntity containing the updated Book entity.
    */
   public ResponseEntity<Book> updateBook(Long id, Book book) {
-    Book currentBook = bookRepository.findById(id).orElse(null);
+    Book currentBook = findBookById(id);
 
     if (currentBook == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -96,21 +97,39 @@ public class BookService {
    * @return A ResponseEntity with HTTP status indicating the result of the delete operation.
    */
   public ResponseEntity<HttpStatus> deleteAllBookCopies(Long id) {
-    Book book = bookRepository.findById(id).orElse(null);
+    Book book = findBookById(id);
     Inventory inventory = inventoryRepository.findByBookId(id);
 
     if (book == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    boolean isACopyLoaned = loanRepository.existsByBookId(id);
-
-    if (isACopyLoaned) {
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    } else {
-      inventoryRepository.delete(inventory);
-      bookRepository.delete(book);
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    if (isACopyLoaned(id)) {
+      return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
+
+    inventoryRepository.delete(inventory);
+    bookRepository.delete(book);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Helper method to find a book by its ID.
+   *
+   * @param id The ID of the book to find.
+   * @return The found Book entity, or null if not found.
+   */
+  private Book findBookById(Long id) {
+    return bookRepository.findById(id).orElse(null);
+  }
+
+  /**
+   * Checks if any copy of a book is currently loaned.
+   *
+   * @param id The ID of the book to check for loaned copies.
+   * @return True if at least one copy is loaned, false otherwise.
+   */
+  private boolean isACopyLoaned(Long id) {
+    return loanRepository.existsByBookId(id);
   }
 }

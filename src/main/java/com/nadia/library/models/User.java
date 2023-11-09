@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Represents a User entity.
  *
- * An entity class that extends the Person class representing an user in the database.
+ * An entity class that extends the Person class representing a user in the database.
  */
 @Entity
 public class User extends Person {

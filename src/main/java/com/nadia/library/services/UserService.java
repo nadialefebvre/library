@@ -18,7 +18,6 @@ public class UserService {
   @Autowired
   private UserRepository userRepository;
 
-
   /**
    * Get a list of all users.
    *
@@ -35,7 +34,7 @@ public class UserService {
    * @return A ResponseEntity containing the User entity if found.
    */
   public ResponseEntity<User> getUserById(Long id) {
-      User user = userRepository.findById(id).orElse(null);
+      User user = findUserById(id);
 
       if (user == null) {
           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -64,7 +63,7 @@ public class UserService {
    * @return A ResponseEntity containing the updated User entity.
    */
   public ResponseEntity<User> updateUser(Long id, User user) {
-    User currentUser = userRepository.findById(id).orElse(null);
+    User currentUser = findUserById(id);
 
     if (currentUser == null) {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -84,7 +83,7 @@ public class UserService {
    * @return A ResponseEntity indicating the result of the delete operation.
    */
   public ResponseEntity<HttpStatus> deleteUser(Long id) {
-    User user = userRepository.findById(id).orElse(null);
+    User user = findUserById(id);
 
     if (user == null) {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -93,5 +92,15 @@ public class UserService {
     userRepository.delete(user);
 
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Helper method to find a user by its ID.
+   *
+   * @param id The ID of the user to find.
+   * @return The found User entity, or null if not found.
+   */
+  private User findUserById(Long id) {
+    return userRepository.findById(id).orElse(null);
   }
 }

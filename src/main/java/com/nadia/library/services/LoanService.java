@@ -57,7 +57,7 @@ public class LoanService {
    * @return A ResponseEntity containing the Loan entity if found.
    */
   public ResponseEntity<Loan> getLoanById(Long id) {
-    Loan loan = loanRepository.findById(id).orElse(null);
+    Loan loan = findLoanById(id);
 
     if (loan == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -73,15 +73,13 @@ public class LoanService {
    * @return A ResponseEntity containing the created Loan entity.
    */
   public ResponseEntity<Loan> createLoan(Loan loan) {
-    boolean isAvailableForALoan = inventoryRepository.inventoryInStockValue(loan.getBookId()) > 0;
-
-    if (!isAvailableForALoan) {
+    if (!isBookAvailableForLoan(loan.getBookId())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    } else {
-      inventoryRepository.decrementInventory(loan.getBookId());
-      Loan savedLoan = loanRepository.save(loan);
-      return new ResponseEntity<>(savedLoan, HttpStatus.CREATED);
     }
+
+    inventoryRepository.decrementInventory(loan.getBookId());
+    Loan savedLoan = loanRepository.save(loan);
+    return new ResponseEntity<>(savedLoan, HttpStatus.CREATED);
   }
 
   /**
@@ -91,22 +89,20 @@ public class LoanService {
    * @return A ResponseEntity containing the renewed Loan entity.
    */
   public ResponseEntity<Loan> renewLoan(Long id) {
-    Loan currentLoan = loanRepository.findById(id).orElse(null);
+    Loan currentLoan = findLoanById(id);
 
     if (currentLoan == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    boolean isRenewable = currentLoan.getStatus() == Status.NEW_LOAN && !loanRepository.isLate(currentLoan);
-
-    if (!isRenewable) {
+    if (!isLoanRenewable(currentLoan)) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    } else {
-      currentLoan.setStatus(Status.RENEWAL);
-      currentLoan.setLoanDate(LocalDate.now());
-      Loan updatedLoan = loanRepository.save(currentLoan);
-      return new ResponseEntity<>(updatedLoan, HttpStatus.OK);
     }
+
+    currentLoan.setStatus(Status.RENEWAL);
+    currentLoan.setLoanDate(LocalDate.now());
+    Loan updatedLoan = loanRepository.save(currentLoan);
+    return new ResponseEntity<>(updatedLoan, HttpStatus.OK);
   }
 
   /**
@@ -116,7 +112,7 @@ public class LoanService {
    * @return A ResponseEntity with HTTP status indicating the result of the delete operation.
    */
   public ResponseEntity<HttpStatus> deleteLoan(Long id) {
-    Loan loan = loanRepository.findById(id).orElse(null);
+    Loan loan = findLoanById(id);
 
     if (loan == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -125,5 +121,35 @@ public class LoanService {
     inventoryRepository.incrementInventory(loan.getBookId());
     loanRepository.delete(loan);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Helper method to find a loan by its ID.
+   *
+   * @param id The ID of the loan to find.
+   * @return The found Loan entity, or null if not found.
+   */
+  private Loan findLoanById(Long id) {
+    return loanRepository.findById(id).orElse(null);
+  }
+
+  /**
+   * Check if a book is available for loan.
+   *
+   * @param bookId The ID of the book to check.
+   * @return True if the book is available, false otherwise.
+   */
+  private boolean isBookAvailableForLoan(Long bookId) {
+    return inventoryRepository.inventoryInStockValue(bookId) > 0;
+  }
+
+  /**
+   * Check if a loan is renewable.
+   *
+   * @param loan The Loan entity to check.
+   * @return True if the loan is renewable, false otherwise.
+   */
+  private boolean isLoanRenewable(Loan loan) {
+    return loan.getStatus() == Status.NEW_LOAN && !loanRepository.isLate(loan);
   }
 }

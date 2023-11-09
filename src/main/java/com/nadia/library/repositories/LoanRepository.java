@@ -31,7 +31,6 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
    */
   Loan findByUserId(Long userId);
 
-
   /**
    * Check if a loan exists for a given book ID.
    *

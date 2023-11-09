@@ -34,7 +34,7 @@ public class AuthorService {
    * @return A ResponseEntity containing the Author entity if found.
    */
   public ResponseEntity<Author> getAuthorById(Long id) {
-    Author author = authorRepository.findById(id).orElse(null);
+    Author author = findAuthorById(id);
 
     if (author == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -62,7 +62,7 @@ public class AuthorService {
    * @return A ResponseEntity containing the updated Author entity.
    */
   public ResponseEntity<Author> updateAuthor(Long id, Author author) {
-    Author currentAuthor = authorRepository.findById(id).orElse(null);
+    Author currentAuthor = findAuthorById(id);
 
     if (currentAuthor == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -81,7 +81,7 @@ public class AuthorService {
    * @return A ResponseEntity with HTTP status indicating the result of the delete operation.
    */
   public ResponseEntity<HttpStatus> deleteAuthor(Long id) {
-    Author author = authorRepository.findById(id).orElse(null);
+    Author author = findAuthorById(id);
 
     if (author == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -89,5 +89,15 @@ public class AuthorService {
 
     authorRepository.delete(author);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Helper method to find an author by its ID.
+   *
+   * @param id The ID of the author to find.
+   * @return The found Author entity, or null if not found.
+   */
+  private Author findAuthorById(Long id) {
+    return authorRepository.findById(id).orElse(null);
   }
 }
