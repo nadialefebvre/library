@@ -43,6 +43,62 @@ public class DataLoader implements CommandLineRunner {
   }
 
   /**
+   * Helper method to create and save a book with associated inventory.
+   * @param title The title of the book.
+   * @param author The author of the book.
+   * @param inventoryCount The count of books in inventory.
+   * @return The created Book entity.
+   */
+  private Book createAndSaveBook(String author, String title, int inventoryCount) {
+    Book book = new Book(author, title);
+    bookRepository.save(book);
+
+    Inventory inventory = new Inventory(book.getId(), inventoryCount);
+    inventoryRepository.save(inventory);
+
+    return book;
+  }
+
+  /**
+   * Helper method to create and save a user.
+   * @param name The name of the user.
+   * @param address The address of the user.
+   * @param email The email of the user.
+   * @return The created User entity.
+   */
+  private User createAndSaveUser(String name, String address, String email) {
+    User user = new User(name, address, email);
+    userRepository.save(user);
+    return user;
+  }
+
+  /**
+   * Helper method to create and save an author.
+   * @param name The name of the author.
+   * @param country The country of the author.
+   * @return The created Author entity.
+   */
+  private Author createAndSaveAuthor(String name, String country) {
+    Author author = new Author(name, country);
+    authorRepository.save(author);
+    return author;
+  }
+
+  /**
+  * Helper method to create and save a loan.
+  * @param bookId The ID of the book for the loan.
+  * @param userId The ID of the user for the loan.
+  * @param status The status of the loan.
+  * @param loanDate The date of the loan.
+  * @return The created Loan entity.
+  */
+  private Loan createAndSaveLoan(Long bookId, Long userId, Status status, LocalDate loanDate) {
+    Loan loan = new Loan(bookId, userId, status, loanDate);
+    loanRepository.save(loan);
+    return loan;
+  }
+
+  /**
    * This method is executed when the application starts and populates the database with initial data.
    * It creates and saves Book, Inventory, User, Author, and Loan entries.
    * It also associates Inventory entries with Books and Loan entries with Books and Users.
@@ -50,42 +106,19 @@ public class DataLoader implements CommandLineRunner {
    */
   @Override
   public void run(String... args) {
-    Book book1 = new Book("Edgar All Poe", "The Narrative of Arthur Gordon Pym of Nantucket");
-    Book book2 = new Book("Selma Lagerlöf", "Holgerssons underbara resa genom Sverige");
-    Book book3 = new Book("Albert Camus", "L'étranger");
+    Book book1 = createAndSaveBook("Edgar Allan Poe", "The Narrative of Arthur Gordon Pym of Nantucket", 4);
+    Book book2 = createAndSaveBook("Selma Lagerlöf", "Holgerssons underbara resa genom Sverige", 4);
+    createAndSaveBook("Albert Camus", "L'étranger", 4);
 
-    bookRepository.save(book1);
-    bookRepository.save(book2);
-    bookRepository.save(book3);
+    User user1 = createAndSaveUser("Sofia B", "123 Main St.", "sofia@example.com");
+    User user2 = createAndSaveUser("Freja L", "456 Main St.", "freja@example.com");
 
-    Inventory inventory1 = new Inventory(book1.getId(), 4);
-    Inventory inventory2 = new Inventory(book2.getId(), 4);
-    Inventory inventory3 = new Inventory(book3.getId(), 4);
+    createAndSaveAuthor("Selma Lagerlöf", "Sweden");
+    createAndSaveAuthor("Edgar Allan Poe", "United Kingdom");
+    createAndSaveAuthor("Albert Camus", "France");
 
-    inventoryRepository.save(inventory1);
-    inventoryRepository.save(inventory2);
-    inventoryRepository.save(inventory3);
-
-    User user1 = new User("Sofia B", "123 Main St.", "sofia@example.com");
-    User user2 = new User("Freja L", "456 Main St.", "freja@example.com");
-
-    userRepository.save(user1);
-    userRepository.save(user2);
-
-    Author author1 = new Author("Selma Lagerlöf", "Sweden");
-    Author author2 = new Author("Edgar Allan Poe", "United Kingdom");
-    Author author3 = new Author("Albert Camus", "France");
-
-    authorRepository.save(author1);
-    authorRepository.save(author2);
-    authorRepository.save(author3);
-
-    Loan loan1 = new Loan(book1.getId(), user1.getId(), Status.NEW_LOAN, LocalDate.parse("2023-10-30"));
-    Loan loan2 = new Loan(book2.getId(), user2.getId(), Status.NEW_LOAN, LocalDate.parse("2023-10-05"));
-    Loan loan3 = new Loan(book1.getId(), user2.getId(), Status.RENEWAL, LocalDate.now());
-
-    loanRepository.save(loan1);
-    loanRepository.save(loan2);
-    loanRepository.save(loan3);
+    createAndSaveLoan(book1.getId(), user1.getId(), Status.NEW_LOAN, LocalDate.parse("2023-10-30"));
+    createAndSaveLoan(book2.getId(), user2.getId(), Status.NEW_LOAN, LocalDate.parse("2023-10-05"));
+    createAndSaveLoan(book1.getId(), user2.getId(), Status.RENEWAL, LocalDate.now());
   }
 }
