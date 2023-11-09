@@ -21,9 +21,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
   /**
    * Find a book by the author and title.
    *
-   * @param author The author of the book to search for.
+   * @param authorId The ID of the author of the book to search for.
    * @param title  The title of the book to search for.
    * @return The Book entity with the specified author and title, if found.
    */
-  Book findByAuthorAndTitle(String author, String title);
+  Book findByAuthorIdAndTitle(Long authorId, String title);
 }

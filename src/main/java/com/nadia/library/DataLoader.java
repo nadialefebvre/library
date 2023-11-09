@@ -44,13 +44,13 @@ public class DataLoader implements CommandLineRunner {
 
   /**
    * Helper method to create and save a book with associated inventory.
+   * @param authorId The ID of the author of the book.
    * @param title The title of the book.
-   * @param author The author of the book.
    * @param inventoryCount The count of books in inventory.
    * @return The created Book entity.
    */
-  private Book createAndSaveBook(String author, String title, int inventoryCount) {
-    Book book = new Book(author, title);
+  private Book createAndSaveBook(Long authorId, String title, int inventoryCount) {
+    Book book = new Book(authorId, title);
     bookRepository.save(book);
 
     Inventory inventory = new Inventory(book.getId(), inventoryCount);
@@ -106,19 +106,20 @@ public class DataLoader implements CommandLineRunner {
    */
   @Override
   public void run(String... args) {
-    Book book1 = createAndSaveBook("Edgar Allan Poe", "The Narrative of Arthur Gordon Pym of Nantucket", 4);
-    Book book2 = createAndSaveBook("Selma Lagerlöf", "Holgerssons underbara resa genom Sverige", 4);
-    createAndSaveBook("Albert Camus", "L'étranger", 4);
+    Author author1 = createAndSaveAuthor("Selma Lagerlöf", "Sweden");
+    Author author2 = createAndSaveAuthor("Edgar Allan Poe", "United Kingdom");
+    Author author3 = createAndSaveAuthor("Albert Camus", "France");
+
+    Book book1 = createAndSaveBook(author2.getId(), "The Narrative of Arthur Gordon Pym of Nantucket", 4);
+    Book book2 = createAndSaveBook(author1.getId(), "Holgerssons underbara resa genom Sverige", 4);
+    Book book3 = createAndSaveBook(author3.getId(), "L'étranger", 4);
 
     User user1 = createAndSaveUser("Sofia B", "123 Main St.", "sofia@example.com");
     User user2 = createAndSaveUser("Freja L", "456 Main St.", "freja@example.com");
 
-    createAndSaveAuthor("Selma Lagerlöf", "Sweden");
-    createAndSaveAuthor("Edgar Allan Poe", "United Kingdom");
-    createAndSaveAuthor("Albert Camus", "France");
-
     createAndSaveLoan(book1.getId(), user1.getId(), Status.NEW_LOAN, LocalDate.parse("2023-10-30"));
     createAndSaveLoan(book2.getId(), user2.getId(), Status.NEW_LOAN, LocalDate.parse("2023-10-05"));
     createAndSaveLoan(book1.getId(), user2.getId(), Status.RENEWAL, LocalDate.now());
+    createAndSaveLoan(book3.getId(), user2.getId(), Status.NEW_LOAN, LocalDate.parse("2023-11-07"));
   }
 }

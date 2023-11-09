@@ -1,9 +1,6 @@
 package com.nadia.library.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 // TODO: change the following code of setters/getters methods to use Lombok instead (less verbose)
@@ -23,10 +20,17 @@ public class Book {
   private Long id;
 
   /**
-   * The author of the book.
+   * A many-to-one relationship with the `Author` entity.
    */
-  @NotNull(message = "`author` is a mandatory field")
-  private String author;
+  @ManyToOne
+  @JoinColumn(name = "authorId", referencedColumnName = "id", insertable = false, updatable = false)
+  private Author author;
+
+  /**
+   * The ID of the associated author.
+   */
+  @NotNull(message = "`authorId` is a mandatory field")
+  private Long authorId;
 
   /**
    * The title of the book.
@@ -40,13 +44,13 @@ public class Book {
   public Book() {}
 
   /**
-   * Constructor to create a Book with an author and title.
+   * Constructor to create a Book with an authorId and title.
    *
-   * @param author The author of the book.
+   * @param authorId The ID of the author of the book.
    * @param title  The title of the book.
    */
-  public Book(String author, String title) {
-    this.author = author;
+  public Book(Long authorId, String title) {
+    this.authorId = authorId;
     this.title = title;
   }
 
@@ -69,21 +73,21 @@ public class Book {
   }
 
   /**
-   * Get the author of the book.
+   * Get the authot ID associated with this book.
    *
-   * @return The author of the book.
+   * @return The author ID.
    */
-  public String getAuthor() {
-    return author;
+  public Long getAuthorId() {
+    return authorId;
   }
 
   /**
-   * Set the author of the book.
+   * Set the authot ID associated with this book.
    *
-   * @param author The author of the book.
+   * @param author The author ID.
    */
-  public void setAuthor(String author) {
-    this.author = author;
+  public void setAuthorId(Long authorId) {
+    this.authorId = authorId;
   }
 
   /**

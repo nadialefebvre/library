@@ -2,6 +2,7 @@ package com.nadia.library.services;
 
 import com.nadia.library.models.Book;
 import com.nadia.library.models.Inventory;
+import com.nadia.library.repositories.AuthorRepository;
 import com.nadia.library.repositories.BookRepository;
 import com.nadia.library.repositories.InventoryRepository;
 import com.nadia.library.repositories.LoanRepository;
@@ -24,6 +25,8 @@ public class BookService {
   private InventoryRepository inventoryRepository;
   @Autowired
   private LoanRepository loanRepository;
+  @Autowired
+  private AuthorRepository authorRepository;
 
   /**
    * Get a list of all books.
@@ -58,7 +61,11 @@ public class BookService {
    * @return A ResponseEntity containing the added Book entity.
    */
   public ResponseEntity<Book> addBook(Book book) {
-    Book bookEntry = bookRepository.findByAuthorAndTitle(book.getAuthor(), book.getTitle());
+    Book bookEntry = bookRepository.findByAuthorIdAndTitle(book.getAuthorId(), book.getTitle());
+
+    if (!doesAuthorExistById(book.getAuthorId())) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
     if (bookEntry != null) {
       inventoryRepository.incrementInventory(bookEntry.getId());
@@ -84,7 +91,7 @@ public class BookService {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    currentBook.setAuthor(book.getAuthor());
+    currentBook.setAuthorId(book.getAuthorId());
     currentBook.setTitle(book.getTitle());
     Book updatedBook = bookRepository.save(currentBook);
     return new ResponseEntity<>(updatedBook, HttpStatus.OK);
@@ -121,6 +128,15 @@ public class BookService {
    */
   private Book findBookById(Long id) {
     return bookRepository.findById(id).orElse(null);
+  }
+
+  /**
+   * Check if an author with the given ID exists in the repository.
+   * @param id The ID of the author to check.
+   * @return True if the author exists, false otherwise.
+   */
+  private boolean doesAuthorExistById(Long id) {
+    return authorRepository.existsById(id);
   }
 
   /**
