@@ -79,8 +79,6 @@ public class LoanService {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     } else {
       inventoryRepository.decrementInventory(loan.getBookId());
-      loan.setStatus(Status.NEW_LOAN);
-      loan.setBorrowingDate(LocalDate.now());
       Loan savedLoan = loanRepository.save(loan);
       return new ResponseEntity<>(savedLoan, HttpStatus.CREATED);
     }
@@ -105,7 +103,7 @@ public class LoanService {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     } else {
       currentLoan.setStatus(Status.RENEWAL);
-      currentLoan.setBorrowingDate(LocalDate.now());
+      currentLoan.setLoanDate(LocalDate.now());
       Loan updatedLoan = loanRepository.save(currentLoan);
       return new ResponseEntity<>(updatedLoan, HttpStatus.OK);
     }

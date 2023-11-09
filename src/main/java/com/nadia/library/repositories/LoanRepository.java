@@ -41,7 +41,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
   boolean existsByBookId(Long bookId);
 
   /**
-   * Check if a loan is late based on the borrowing date and current date.
+   * Check if a loan is late based on the loan date and current date.
    *
    * @param loan The Loan entity to check for lateness.
    * @return true if the loan is late, false otherwise.
@@ -49,8 +49,8 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
   // TODO: maybe add a parameter to allow passing a loan length instead of setting it here?
   public default boolean isLate(Loan loan) {
     LocalDate currentDate = LocalDate.now();
-    LocalDate borrowingDate = loan.getBorrowingDate();
-    long daysDifference = ChronoUnit.DAYS.between(borrowingDate, currentDate);
+    LocalDate loanDate = loan.getLoanDate();
+    long daysDifference = ChronoUnit.DAYS.between(loanDate, currentDate);
     if (daysDifference > 21) {
       return true;
     } else {

@@ -46,6 +46,12 @@ public class Loan {
   private Long userId;
 
   /**
+   * The status of the loan.
+   */
+  @Enumerated(EnumType.STRING)
+  private Status status = Status.NEW_LOAN;
+
+  /**
    * Enumeration representing the status of the loan (NEW_LOAN or RENEWAL).
    */
   public enum Status {
@@ -54,14 +60,9 @@ public class Loan {
   }
 
   /**
-   * The status of the loan.
+   * The date on which the book was loaned.
    */
-  private Status status;
-
-  /**
-   * The date on which the book was borrowed.
-   */
-  private LocalDate borrowingDate;
+  private LocalDate loanDate = LocalDate.now();
 
   /**
    * Default constructor for the Loan class.
@@ -69,18 +70,18 @@ public class Loan {
   public Loan() {}
 
   /**
-   * Constructor to create a Loan with book ID, user ID, loan status, and borrowing date.
+   * Constructor to create a Loan with book ID, user ID, loan status, and loan date.
    *
    * @param bookId        The ID of the associated book.
    * @param userId        The ID of the user who borrowed the book.
    * @param status        The status of the loan (NEW_LOAN or RENEWAL).
-   * @param borrowingDate The date on which the book was borrowed.
+   * @param loanDate The date on which the book was loaned.
    */
-  public Loan(Long bookId, Long userId, Status status, LocalDate borrowingDate) {
+  public Loan(Long bookId, Long userId, Status status, LocalDate loanDate) {
     this.bookId = bookId;
     this.userId = userId;
     this.status = status;
-    this.borrowingDate = borrowingDate;
+    this.loanDate = loanDate;
   }
 
 
@@ -157,20 +158,20 @@ public class Loan {
   }
 
   /**
-   * Get the date on which the book was borrowed.
+   * Get the date on which the book was loaned.
    *
-   * @return The borrowing date.
+   * @return The loan date.
    */
-  public LocalDate getBorrowingDate() {
-    return borrowingDate;
+  public LocalDate getLoanDate() {
+    return loanDate;
   }
 
   /**
-   * Set the date on which the book was borrowed.
+   * Set the date on which the book was loaned.
    *
-   * @param borrowingDate The borrowing date.
+   * @param loanDate The loan date.
    */
-  public void setBorrowingDate(LocalDate borrowingDate) {
-    this.borrowingDate = borrowingDate;
+  public void setLoanDate(LocalDate loanDate) {
+    this.loanDate = loanDate;
   }
 }
