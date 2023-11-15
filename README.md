@@ -1,8 +1,10 @@
 # Library application
 
+This is a project started to learn Java, first project with this language (automn 2023)
+
 ## Overview
 
-This is a simple Java application that serves as a basic library system, allowing to manage a collection of books. It provides a set of RESTful API endpoints for performing CRUD (Create, Read, Update, Delete) operations on books. The application is built using the Spring Boot framework and utilizes Spring Data JPA for database interactions.
+This is a simple Java application that serves as a basic library system, allowing to manage a collection of books. It provides a set of RESTful API endpoints for performing CRUD (Create, Read, Update, Delete) operations on books, authors, users and loans. The application is built using the Spring Boot framework and utilizes Spring Data JPA for database interactions.
 
 ## Getting started
 
@@ -79,6 +81,14 @@ The application provides the following API endpoints for managing books:
 - `POST /users`: Create a new user.
 - `PATCH /users/{id}`: Update an existing user.
 - `DELETE /users/{id}`: Delete a user.
+
+### Authors
+
+- `GET /authors`: Retrieve a list of all authors.
+- `GET /authors/{id}`: Retrieve a specific author by their ID.
+- `POST /authors`: Create a new author.
+- `PATCH /authors/{id}`: Update an existing author.
+- `DELETE /authors/{id}`: Delete an author.
 
 ## Example usage
 
@@ -227,6 +237,46 @@ Here are some example requests you can make to interact with the API:
 - Delete a user:
   ```
   DELETE http://localhost:8080/users/{id}
+  ```
+
+### Authors
+
+- Retrieve all authors:
+
+  ```
+  GET http://localhost:8080/authors
+  ```
+
+- Retrieve a specific author by ID:
+
+  ```
+  GET http://localhost:8080/authors/{id}
+  ```
+
+- Create a new author:
+
+  ```
+  POST http://localhost:8080/authors
+  Body:
+  {
+    "name": "Jane Doe"
+    "country": "Sweden"
+  }
+  ```
+
+- Update an existing author:
+
+  ```
+  PATCH http://localhost:8080/authors/{id}
+  Body:
+  {
+    "name": "Updated name"
+  }
+  ```
+
+- Delete an author:
+  ```
+  DELETE http://localhost:8080/authors/{id}
   ```
 
 ## Tech
