@@ -29,7 +29,7 @@ public class Loan {
   /**
    * The ID of the associated book.
    */
-  @NotNull(message = "`bookId` is a mandatory field")
+  @NotNull(message = "`bookId` is a mandatory field: must not be null")
   private Long bookId;
 
   /**
@@ -42,7 +42,7 @@ public class Loan {
   /**
    * The ID of the user who borrowed the book.
    */
-  @NotNull(message = "`userId` is a mandatory field")
+  @NotNull(message = "`userId` is a mandatory field: must not be null")
   private Long userId;
 
   /**

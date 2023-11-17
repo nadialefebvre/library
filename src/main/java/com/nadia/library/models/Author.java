@@ -1,7 +1,7 @@
 package com.nadia.library.models;
 
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * Represents an Author entity.
@@ -13,7 +13,7 @@ public class Author extends Person {
   /**
    * The country of the author.
    */
-  @NotNull(message = "`country` is a mandatory field")
+  @NotBlank(message = "`country` is a mandatory field: must not be null and must contain at least one non-whitespace character")
   private String country;
 
   /**

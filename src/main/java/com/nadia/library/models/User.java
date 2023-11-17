@@ -2,6 +2,7 @@ package com.nadia.library.models;
 
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -14,7 +15,7 @@ public class User extends Person {
   /**
    * The address of the user.
    */
-  @NotNull(message = "`address` is a mandatory field")
+  @NotBlank(message = "`address` is a mandatory field: must not be null and must contain at least one non-whitespace character")
   private String address;
 
   /**
@@ -23,7 +24,7 @@ public class User extends Person {
   @Email(
     message = "`email` must have a valid email format, such as name@example.com",
     regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
-  @NotNull(message = "`email` is a mandatory field")
+  @NotNull(message = "`email` is a mandatory field: must not be null")
   private String email;
 
   /**

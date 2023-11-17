@@ -1,6 +1,7 @@
 package com.nadia.library.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 // TODO: change the following code of setters/getters methods to use Lombok instead (less verbose)
@@ -29,13 +30,13 @@ public class Book {
   /**
    * The ID of the associated author.
    */
-  @NotNull(message = "`authorId` is a mandatory field")
+  @NotNull(message = "`authorId` is a mandatory field: must not be null")
   private Long authorId;
 
   /**
    * The title of the book.
    */
-  @NotNull(message = "`title` is a mandatory field")
+  @NotBlank(message = "`title` is a mandatory field: must not be null and must contain at least one non-whitespace character")
   private String title;
 
   /**

@@ -34,7 +34,7 @@ public class Inventory {
    * The quantity of the book in stock, must not be less than 0.
    */
   @Min(value=0, message = "`inStock` can't have a value < 0")
-  @NotNull(message = "`inStock` is a mandatory field")
+  @NotNull(message = "`inStock` is a mandatory field: must not be null and must contain at least one non-whitespace character")
   private Integer inStock;
 
   /**

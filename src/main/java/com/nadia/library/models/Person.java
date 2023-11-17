@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * Represents a Person entity.
@@ -23,7 +23,7 @@ public class Person {
   /**
    * The name of the person.
    */
-  @NotNull(message = "`name` is a mandatory field")
+  @NotBlank(message = "`name` is a mandatory field: must not be null and must contain at least one non-whitespace character")
   private String name;
 
   /**
