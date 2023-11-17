@@ -45,13 +45,19 @@ public class UserService {
 
   /**
    * Create a new user.
+   * If the user already exists, display an error message; otherwise, create a new entry.
    *
    * @param user The User entity to create.
    * @return A ResponseEntity containing the created User entity.
    */
-  public ResponseEntity<User> createUser(User user) {
-    User savedUser = userRepository.save(user);
+  public ResponseEntity<?> createUser(User user) {
+    User currentUser = userRepository.findByEmail(user.getEmail());
 
+    if(currentUser != null) {
+      return new ResponseEntity<>("User with this email already exists", HttpStatus.CONFLICT);
+    }
+
+    User savedUser = userRepository.save(user);
     return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
   }
 
