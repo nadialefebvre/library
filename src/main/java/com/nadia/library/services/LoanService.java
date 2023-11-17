@@ -2,8 +2,10 @@ package com.nadia.library.services;
 
 import com.nadia.library.models.Loan;
 import com.nadia.library.models.Loan.Status;
+import com.nadia.library.repositories.BookRepository;
 import com.nadia.library.repositories.InventoryRepository;
 import com.nadia.library.repositories.LoanRepository;
+import com.nadia.library.repositories.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,6 +25,10 @@ public class LoanService {
   private LoanRepository loanRepository;
   @Autowired
   private InventoryRepository inventoryRepository;
+  @Autowired
+  private BookRepository bookRepository;
+  @Autowired
+  private UserRepository userRepository;
 
   /**
    * Get a list of all loans.
@@ -49,7 +55,6 @@ public class LoanService {
     return lateLoans;
   }
 
-
   /**
    * Get a loan by its ID.
    *
@@ -73,6 +78,14 @@ public class LoanService {
    * @return A ResponseEntity containing the created Loan entity.
    */
   public ResponseEntity<Loan> createLoan(Loan loan) {
+    if (!doesBookExistById(loan.getBookId())) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    if (!doesUserExistById(loan.getUserId())) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     if (!isBookAvailableForLoan(loan.getBookId())) {
       return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
@@ -151,5 +164,23 @@ public class LoanService {
    */
   private boolean isLoanRenewable(Loan loan) {
     return loan.getStatus() == Status.NEW_LOAN && !loanRepository.isLate(loan);
+  }
+
+  /**
+   * Check if a user with the given ID exists in the repository.
+   * @param id The ID of the user to check.
+   * @return True if the user exists, false otherwise.
+   */
+  private boolean doesUserExistById(Long id) {
+    return userRepository.existsById(id);
+  }
+
+  /**
+   * Check if a book with the given ID exists in the repository.
+   * @param id The ID of the book to check.
+   * @return True if the book exists, false otherwise.
+   */
+  private boolean doesBookExistById(Long id) {
+    return bookRepository.existsById(id);
   }
 }
