@@ -50,6 +50,12 @@ public class AuthorService {
    * @return A ResponseEntity containing the created Author entity.
    */
   public ResponseEntity<Author> createAuthor(Author author) {
+    Author currentAuthor = authorRepository.findByNameAndCountry(author.getName(), author.getCountry());
+
+    if(currentAuthor != null) {
+      return new ResponseEntity<>(currentAuthor, HttpStatus.OK);
+    }
+
     Author savedAuthor = authorRepository.save(author);
     return new ResponseEntity<>(savedAuthor, HttpStatus.CREATED);
   }

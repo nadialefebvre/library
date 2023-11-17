@@ -13,10 +13,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
   /**
-   * Find an author by their name.
+   * Find an author by their name and country.
    *
    * @param name The name of the author to search for.
+   * @param country The country of the author to search for.
    * @return The Author entity with the specified name, if found.
    */
-  Author findByName(String name);
+  Author findByNameAndCountry(String name, String country);
 }
