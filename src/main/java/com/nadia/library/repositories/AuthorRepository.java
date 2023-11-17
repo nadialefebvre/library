@@ -17,7 +17,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
    *
    * @param name The name of the author to search for.
    * @param country The country of the author to search for.
-   * @return The Author entity with the specified name, if found.
+   * @return The Author entity with the specified name and country, if found.
    */
   Author findByNameAndCountry(String name, String country);
 }
