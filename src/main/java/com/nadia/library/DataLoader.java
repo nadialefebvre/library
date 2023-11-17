@@ -106,12 +106,12 @@ public class DataLoader implements CommandLineRunner {
    */
   @Override
   public void run(String... args) {
-    Author author1 = createAndSaveAuthor("Selma Lagerlöf", "Sweden");
-    Author author2 = createAndSaveAuthor("Edgar Allan Poe", "United Kingdom");
+    Author author1 = createAndSaveAuthor("Edgar Allan Poe", "United States");
+    Author author2 = createAndSaveAuthor("Selma Lagerlöf", "Sweden");
     Author author3 = createAndSaveAuthor("Albert Camus", "France");
 
-    Book book1 = createAndSaveBook(author2.getId(), "The Narrative of Arthur Gordon Pym of Nantucket", 4);
-    Book book2 = createAndSaveBook(author1.getId(), "Holgerssons underbara resa genom Sverige", 4);
+    Book book1 = createAndSaveBook(author1.getId(), "The Narrative of Arthur Gordon Pym of Nantucket", 4);
+    Book book2 = createAndSaveBook(author2.getId(), "Holgerssons underbara resa genom Sverige", 4);
     Book book3 = createAndSaveBook(author3.getId(), "L'étranger", 4);
 
     User user1 = createAndSaveUser("Sofia B", "123 Main St.", "sofia@example.com");
