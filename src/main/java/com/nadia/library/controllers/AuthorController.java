@@ -51,7 +51,7 @@ public class AuthorController {
    * @return A ResponseEntity containing the created Author entity.
    */
   @PostMapping("")
-  public ResponseEntity<Author> createAuthor(@Valid @RequestBody Author author) {
+  public ResponseEntity<?> createAuthor(@Valid @RequestBody Author author) {
     return authorService.createAuthor(author);
   }
 

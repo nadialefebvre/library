@@ -49,11 +49,11 @@ public class AuthorService {
    * @param author The Author entity to create.
    * @return A ResponseEntity containing the created Author entity.
    */
-  public ResponseEntity<Author> createAuthor(Author author) {
+  public ResponseEntity<?> createAuthor(Author author) {
     Author currentAuthor = authorRepository.findByNameAndCountry(author.getName(), author.getCountry());
 
     if(currentAuthor != null) {
-      return new ResponseEntity<>(currentAuthor, HttpStatus.OK);
+      return new ResponseEntity<>("This author already exists", HttpStatus.CONFLICT);
     }
 
     Author savedAuthor = authorRepository.save(author);
