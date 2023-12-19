@@ -8,6 +8,7 @@ import com.nadia.library.repositories.LoanRepository;
 import com.nadia.library.repositories.UserRepository;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class LoanService {
     List<Loan> loans = loanRepository.findAll();
 
     List<Loan> lateLoans = loans.stream()
-      .filter(loan -> loanRepository.isLate(loan))
+      .filter(loan -> isLate(loan))
       .collect(Collectors.toList());
 
     return lateLoans;
@@ -157,13 +158,31 @@ public class LoanService {
   }
 
   /**
+   * Check if a loan is late based on the loan date and current date.
+   *
+   * @param loan The Loan entity to check for lateness.
+   * @return true if the loan is late, false otherwise.
+   */
+  // TODO: maybe add a parameter to allow passing a loan length instead of setting it here?
+  private boolean isLate(Loan loan) {
+    LocalDate currentDate = LocalDate.now();
+    LocalDate loanDate = loan.getLoanDate();
+    long daysDifference = ChronoUnit.DAYS.between(loanDate, currentDate);
+    if (daysDifference > 21) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
    * Check if a loan is renewable.
    *
    * @param loan The Loan entity to check.
    * @return True if the loan is renewable, false otherwise.
    */
   private boolean isLoanRenewable(Loan loan) {
-    return loan.getStatus() == Status.NEW_LOAN && !loanRepository.isLate(loan);
+    return loan.getStatus() == Status.NEW_LOAN && !isLate(loan);
   }
 
   /**
